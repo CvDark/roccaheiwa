@@ -1,0 +1,53 @@
+<?php
+// institution/api/nfc_set_mode.php
+// Admin set register mode ON/OFF untuk device tertentu
+// Dipanggil dari nfc_management.php bila admin klik "Start/Stop Scanning"
+
+header('Content-Type: application/json');
+header('ngrok-skip-browser-warning: true');
+require_once '../config.php';
+
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Not logged in']);
+    exit;
+}
+
+$input      = json_decode(file_get_contents('php://input'), true);
+$device_id  = trim($input['device_id'] ?? '');
+$mode       = (int)($input['mode'] ?? 0); // 1 = register ON, 0 = register OFF
+
+if (empty($device_id)) {
+    echo json_encode(['success' => false, 'message' => 'Missing device_id']);
+    exit;
+}
+
+try {
+    // Set register mode untuk semua locker dengan device_id ini
+    $stmt = $pdo->prepare("
+        UPDATE lockers
+        SET nfc_register_mode = ?
+        WHERE device_id = ?
+    ");
+    $stmt->execute([$mode, $device_id]);
+
+    if ($mode === 0) {
+        // Clear pending register scans bila mode OFF
+        $pdo->prepare("
+            DELETE FROM nfc_scan_queue
+            WHERE esp32_device_id = ? AND purpose = 'register' AND status = 'pending'
+        ")->execute([$device_id]);
+    }
+
+    echo json_encode([
+        'success' => true,
+        'mode'    => $mode,
+        'message' => $mode ? 'Register mode ON — sedia untuk scan' : 'Register mode OFF'
+    ]);
+
+} catch (Exception $e) {
+    error_log("nfc_set_mode error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Server error']);
+}
+?>
