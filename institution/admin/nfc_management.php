@@ -1,15 +1,15 @@
 <?php
 // institution/admin/nfc_management.php
-require_once '../config.php';
-if (!isLoggedIn()) redirect('../login.php');
+require_once 'config.php'; // Admin config — guna $_SESSION['admin_id']
+requireAdmin();
 
-$admin_id   = (int)$_SESSION['user_id'];
-$admin_name = $_SESSION['user_name'] ?? 'Admin';
+$admin_id   = (int)$_SESSION['admin_id'];
+$admin_name = $_SESSION['admin_name'] ?? 'Admin';
 
-// Ambil device_id dari locker pertama yang ada (untuk polling register)
+// Ambil device_id dari locker pertama yang active (untuk polling register)
 $nfc_device_id = '';
 try {
-    $dev = $pdo->query("SELECT device_id FROM lockers WHERE device_id IS NOT NULL AND device_id != '' LIMIT 1")->fetch();
+    $dev = $pdo->query("SELECT device_id FROM lockers WHERE device_id IS NOT NULL AND device_id != '' AND status != 'maintenance' LIMIT 1")->fetch();
     $nfc_device_id = $dev['device_id'] ?? '';
 } catch(Exception $e) {}
 

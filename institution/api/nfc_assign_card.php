@@ -8,12 +8,13 @@ require_once '../config.php';
 
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-if (!isset($_SESSION['user_id'])) {
+// Support admin session (admin_id) ATAU user session (user_id)
+$admin_id = (int)($_SESSION['admin_id'] ?? $_SESSION['user_id'] ?? 0);
+if (!$admin_id) {
     echo json_encode(['success' => false, 'message' => 'Not logged in']);
     exit;
 }
 
-$admin_id = (int)$_SESSION['user_id'];
 $input    = json_decode(file_get_contents('php://input'), true);
 
 $nfc_uid        = strtoupper(trim($input['nfc_uid']  ?? ''));

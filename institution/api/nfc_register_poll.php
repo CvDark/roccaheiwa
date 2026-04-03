@@ -9,7 +9,8 @@ require_once '../config.php';
 
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-if (!isset($_SESSION['user_id'])) {
+// Support admin session (admin_id) ATAU user session (user_id)
+if (!isset($_SESSION['admin_id']) && !isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Not logged in']);
     exit;
 }

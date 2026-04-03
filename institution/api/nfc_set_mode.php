@@ -8,12 +8,13 @@ require_once '../config.php';
 
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-if (!isset($_SESSION['user_id'])) {
+// Support admin session (admin_id) ATAU user session (user_id)
+if (!isset($_SESSION['admin_id']) && !isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Not logged in']);
     exit;
 }
 
-$user_id   = (int)$_SESSION['user_id'];
+$user_id   = (int)($_SESSION['user_id'] ?? 0); // 0 kalau admin login
 $input     = json_decode(file_get_contents('php://input'), true);
 $device_id = trim($input['device_id'] ?? '');
 $mode      = (int)($input['mode'] ?? 0); // 1=ON, 0=OFF
@@ -35,20 +36,23 @@ try {
             exit;
         }
     } else {
-        // Fallback: ambil dari locker yang di-assign kepada user ini
-        $stmt = $pdo->prepare("
-            SELECT l.device_id FROM user_locker_assignments ula
-            JOIN lockers l ON l.id = ula.locker_id
-            WHERE ula.user_id = ? AND ula.is_active = 1
-              AND l.device_id IS NOT NULL AND l.device_id != ''
-              AND l.status != 'maintenance'
-            LIMIT 1
-        ");
-        $stmt->execute([$user_id]);
-        $dev = $stmt->fetch();
-        $device_id = $dev['device_id'] ?? '';
+        // Fallback: kalau user biasa, cuba cari locker yang di-assign
+        // Kalau admin (user_id=0), skip terus ke cari mana-mana device
+        if ($user_id > 0) {
+            $stmt = $pdo->prepare("
+                SELECT l.device_id FROM user_locker_assignments ula
+                JOIN lockers l ON l.id = ula.locker_id
+                WHERE ula.user_id = ? AND ula.is_active = 1
+                  AND l.device_id IS NOT NULL AND l.device_id != ''
+                  AND l.status != 'maintenance'
+                LIMIT 1
+            ");
+            $stmt->execute([$user_id]);
+            $dev = $stmt->fetch();
+            $device_id = $dev['device_id'] ?? '';
+        }
 
-        // Kalau masih kosong, cari mana-mana device dalam sistem
+        // Kalau masih kosong (atau admin), cari mana-mana device dalam sistem
         if (empty($device_id)) {
             $stmt_any = $pdo->query("
                 SELECT device_id FROM lockers
