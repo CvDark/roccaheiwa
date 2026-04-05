@@ -1,0 +1,33 @@
+# ==========================
+# Environment / Secrets
+# ==========================
+# Jangan sekali-kali commit fail .env yang ada credentials!
+.env
+*.env
+
+# ==========================
+# PHP / General
+# ==========================
+/vendor/
+composer.phar
+
+# ==========================
+# OS Files
+# ==========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================
+# IDE / Editor
+# ==========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==========================
+# Logs
+# ==========================
+*.log
+/logs/

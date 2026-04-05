@@ -12,57 +12,75 @@ date_default_timezone_set('Asia/Kuala_Lumpur');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Institution Database
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'locker_institution');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Institution Database - load from .env file
+$envFile = __DIR__ . '/.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        [$key, $value] = array_map('trim', explode('=', $line, 2));
+        if (!defined($key)) putenv("$key=$value");
+    }
+}
+
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: '');
+define('DB_USER', getenv('DB_USER') ?: '');
+define('DB_PASS', getenv('DB_PASS') ?: '');
 
 try {
     $pdo = new PDO(
-        "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=utf8mb4",
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
         DB_USER,
         DB_PASS,
         [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false
+            PDO::ATTR_EMULATE_PREPARES => false
         ]
     );
     $_SESSION['db_connected'] = true;
 } catch (PDOException $e) {
-    $_SESSION['db_error']     = $e->getMessage();
+    $_SESSION['db_error'] = $e->getMessage();
     $_SESSION['db_connected'] = false;
     $pdo = null;
     error_log("Institution DB Connection Failed: " . $e->getMessage());
 }
 
 // Helper Functions
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
-function isAdmin() {
+function isAdmin()
+{
     return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 }
 
-function isUser() {
+function isUser()
+{
     return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'user';
 }
 
-function redirect($url) {
+function redirect($url)
+{
     header("Location: $url");
     exit;
 }
 
-function sanitize($input) {
-    if (is_array($input)) return array_map('sanitize', $input);
+function sanitize($input)
+{
+    if (is_array($input))
+        return array_map('sanitize', $input);
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
 }
 
-function checkDatabase() {
+function checkDatabase()
+{
     global $pdo;
-    if (!$pdo) return false;
+    if (!$pdo)
+        return false;
     try {
         $pdo->query("SELECT 1");
         return true;
@@ -72,9 +90,11 @@ function checkDatabase() {
     }
 }
 
-function isDbConnected() {
+function isDbConnected()
+{
     return isset($_SESSION['db_connected']) && $_SESSION['db_connected'] === true;
 }
 
-if (ob_get_length()) ob_end_flush();
+if (ob_get_length())
+    ob_end_flush();
 ?>
