@@ -1,6 +1,9 @@
 <?php
 ob_start();
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('LOCKER_INSTITUTION');
+    session_start();
+}
 date_default_timezone_set('Asia/Kuala_Lumpur');
 
 // Institution Database - load from .env file
