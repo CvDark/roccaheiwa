@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             if (!checkDatabase()) {
-                $error = 'Database connection error. Please contact administrator.';
+                $error = 'Database connection error: ' . ($_SESSION['db_error'] ?? 'Check your .env credentials');
             } else {
                 global $pdo;
                 // Cari user dengan email ATAU user_id_number

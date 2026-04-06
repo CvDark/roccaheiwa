@@ -18,16 +18,31 @@ $envFile = __DIR__ . '/.env';
 if (file_exists($envFile)) {
     $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
-        if (strpos(trim($line), '#') === 0) continue;
-        [$key, $value] = array_map('trim', explode('=', $line, 2));
-        if (!defined($key)) putenv("$key=$value");
+        $line = trim($line);
+        if (empty($line) || strpos($line, '#') === 0) continue;
+        
+        $parts = explode('=', $line, 2);
+        if (count($parts) === 2) {
+            $key = trim($parts[0]);
+            $value = trim($parts[1]);
+            
+            // Set for getenv(), $_ENV, and $_SERVER
+            putenv("$key=$value");
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
     }
 }
 
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: '');
-define('DB_USER', getenv('DB_USER') ?: '');
-define('DB_PASS', getenv('DB_PASS') ?: '');
+// Function to safely get environment variables
+function get_env_var($key, $default = null) {
+    return getenv($key) ?: ($_ENV[$key] ?? ($_SERVER[$key] ?? $default));
+}
+
+define('DB_HOST', get_env_var('DB_HOST', 'localhost'));
+define('DB_NAME', get_env_var('DB_NAME', ''));
+define('DB_USER', get_env_var('DB_USER', ''));
+define('DB_PASS', get_env_var('DB_PASS', ''));
 
 // Create connection with error handling
 try {
