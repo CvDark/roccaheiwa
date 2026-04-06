@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Database connection test
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "locker_system";
-
 require_once 'config.php';
+$servername = DB_HOST;
+$username = DB_USER;
+$password = DB_PASS;
+$dbname = DB_NAME;
 
 if (isLoggedIn()) {
     redirect('dashboard.php');

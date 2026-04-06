@@ -14,10 +14,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "locker_system";
+require_once 'config.php';
+$servername = DB_HOST;
+$username = DB_USER;
+$password = DB_PASS;
+$dbname = DB_NAME;
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
