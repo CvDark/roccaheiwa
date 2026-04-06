@@ -19,7 +19,7 @@ const int LOCKER_ID = 2;
 // ✅ FIXED: Point to root API to handle both Commercial and Institution
 const String SERVER_URL = "https://roccaheiwa.com";
 
-const String DEVICE_ID = "DEV001";
+const String DEVICE_ID = "DEV002";
 
 const String CHECK_STATUS_URL =
     SERVER_URL + "/api/check_status.php?locker_id=" + String(LOCKER_ID);
