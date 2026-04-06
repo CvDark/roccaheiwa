@@ -18,10 +18,10 @@ if ($locker_id <= 0) {
 function checkStatus($pdo, $locker_id) {
     if (!$pdo) return "LOCK";
     try {
-        $stmt = $pdo->prepare("SELECT status FROM lockers WHERE id = ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT command_status FROM lockers WHERE id = ? LIMIT 1");
         $stmt->execute([$locker_id]);
         $row = $stmt->fetch();
-        return ($row && strtoupper($row['status']) === 'UNLOCK') ? "UNLOCK" : "LOCK";
+        return ($row && strtoupper($row['command_status']) === 'UNLOCK') ? "UNLOCK" : "LOCK";
     } catch (Exception $e) {
         return "LOCK";
     }
