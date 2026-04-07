@@ -9,17 +9,26 @@
 #include <Wire.h>
 
 // ═══════════════════════════════════════════════
-//   KONFIGURASI — WAJIB TUKAR
+//   KONFIGURASI — LOCKER PROFILE
 // ═══════════════════════════════════════════════
+
+/* --- PILIH SALAH SATU PROFIL DI BAWAH --- */
+
+// [A] PROFIL: COMMERCIAL
+// const int LOCKER_ID = 1;
+// const String DEVICE_ID = "DEV-COMM";
+
+// [B] PROFIL: INSTITUTION
+const int LOCKER_ID = 2;
+const String DEVICE_ID = "DEV-INST";
+
+// ═══════════════════════════════════════════════
+
 const char *WIFI_SSID = "test";
 const char *WIFI_PASSWORD = "12345678";
 
-const int LOCKER_ID = 2;
-
 // ✅ FIXED: Point to root API to handle both Commercial and Institution
 const String SERVER_URL = "https://roccaheiwa.com";
-
-const String DEVICE_ID = "DEV002";
 
 const String CHECK_STATUS_URL =
     SERVER_URL + "/api/check_status.php?locker_id=" + String(LOCKER_ID);

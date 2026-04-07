@@ -42,7 +42,7 @@ try {
     }
 
     // Log
-    $pdo->prepare("INSERT INTO activity_logs (user_id, locker_id, device_id, access_method, key_used, success, timestamp) VALUES (?, ?, 'web_api', 'qr_code', ?, 1, NOW())")
+    $pdo->prepare("INSERT INTO activity_logs (user_id, locker_id, device_id, access_method, key_used, success, timestamp) VALUES (?, ?, 'web_api', 'web', ?, 1, NOW())")
         ->execute([$user_id, $match['id'], $access_key]);
 
     // Set LOCK command for ESP32

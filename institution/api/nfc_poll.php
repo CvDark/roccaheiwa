@@ -117,9 +117,26 @@ try {
         exit;
     }
 
+    $token_user_id = (int)$_SESSION['user_id'];
     $card_owner_id = (int)$card_user['user_id'];
 
-    // ── 4. Semak assignment untuk locker ini ──
+    // ── 4. SECURITY: Semak card yang di-tap adalah milik user yang sedang login ──
+    if ($token_user_id !== $card_owner_id) {
+        $pdo->prepare("
+            INSERT INTO activity_logs
+            (user_id, locker_id, device_id, access_method, key_used, success, timestamp)
+            VALUES (?, ?, ?, 'nfc_card', ?, 0, NOW())
+        ")->execute([$token_user_id, $locker_id, $device_id, $nfc_uid]);
+
+        echo json_encode([
+            'success' => false,
+            'scanned' => true,
+            'message' => 'NFC card ini bukan milik anda. Sila tap card anda sendiri.'
+        ]);
+        exit;
+    }
+
+    // ── 5. Semak assignment untuk locker ini ──
     $stmt_assign = $pdo->prepare("
         SELECT ula.key_value,
                COALESCE(ula.custom_name, l.unique_code) AS locker_name,
@@ -136,13 +153,13 @@ try {
     $stmt_assign->execute([$locker_id, $card_owner_id]);
     $assignment = $stmt_assign->fetch();
 
-    // ── 5a. Ada assignment → UNLOCK ──
+    // ── 6a. Ada assignment → UNLOCK ──
     if ($assignment) {
         $pdo->prepare("
             INSERT INTO activity_logs
             (user_id, locker_id, device_id, access_method, key_used, success, timestamp)
             VALUES (?, ?, ?, 'nfc_card', ?, 1, NOW())
-        ")->execute([$card_owner_id, $assignment['lid'], $device_id, $assignment['key_value']]);
+        ")->execute([$card_owner_id, $assignment['lid'], $device_id, $nfc_uid]);
 
         $pdo->prepare("UPDATE lockers SET command_status = 'UNLOCK' WHERE id = ?")
             ->execute([$locker_id]);
@@ -159,12 +176,13 @@ try {
                 'institution'    => $card_user['institution'],
                 'locker_name'    => $assignment['locker_name'],
                 'location'       => $assignment['location'],
+                'access_key'     => $assignment['key_value'], // Added access_key back
             ]
         ]);
         exit;
     }
 
-    // ── 5b. Tiada assignment — semak boleh claim tak ──
+    // ── 6b. Tiada assignment — semak boleh claim tak ──
 
     // Locker kena 'available'
     if ($locker['status'] !== 'available') {
@@ -215,7 +233,7 @@ try {
         INSERT INTO activity_logs
         (user_id, locker_id, device_id, access_method, key_used, success, timestamp)
         VALUES (?, ?, ?, 'nfc_card', ?, 1, NOW())
-    ")->execute([$card_owner_id, $locker_id, $device_id, $access_key]);
+    ")->execute([$card_owner_id, $locker_id, $device_id, $nfc_uid]); // Consistently log $nfc_uid for card scan
 
     // UNLOCK terus selepas assign
     $pdo->prepare("UPDATE lockers SET command_status = 'UNLOCK' WHERE id = ?")

@@ -25,13 +25,30 @@ $revoke         = !empty($input['revoke']);
 // Handle revoke
 if ($revoke && $target_user_id) {
     try {
+        // First get user info (matric number)
+        $stmt_u = $pdo->prepare("SELECT user_id_number FROM users WHERE id = ? LIMIT 1");
+        $stmt_u->execute([$target_user_id]);
+        $user_row = $stmt_u->fetch();
+        $matric = $user_row ? $user_row['user_id_number'] : '';
+
+        $pdo->beginTransaction();
+
+        // 1. Clear in users table
         $pdo->prepare("UPDATE users SET nfc_uid=NULL, nfc_registered_at=NULL WHERE id=?")
             ->execute([$target_user_id]);
-        $pdo->prepare("UPDATE registered_matrics rm JOIN users u ON u.user_id_number = rm.id_number SET rm.nfc_uid=NULL WHERE u.id=?")
-            ->execute([$target_user_id]);
+
+        // 2. Clear in registered_matrics table using matric number (if found)
+        if ($matric) {
+            $pdo->prepare("UPDATE registered_matrics SET nfc_uid=NULL WHERE id_number=?")
+                ->execute([$matric]);
+        }
+
+        $pdo->commit();
         echo json_encode(['success' => true, 'message' => 'Card berjaya direvoke']);
     } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Server error']);
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        error_log("Revoke Error: " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Gagal revoke: Server error']);
     }
     exit;
 }
