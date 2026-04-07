@@ -9,20 +9,12 @@
 #include <Wire.h>
 
 // ═══════════════════════════════════════════════
-//   KONFIGURASI — LOCKER PROFILE
+//   KONFIGURASI — DUAL-MODE PROFILE
 // ═══════════════════════════════════════════════
 
-/* --- PILIH SALAH SATU PROFIL DI BAWAH --- */
-
-// [A] PROFIL: COMMERCIAL
-// const int LOCKER_ID = 1;
-// const String DEVICE_ID = "DEV-COMM";
-
-// [B] PROFIL: INSTITUTION
-const int LOCKER_ID = 2;
-const String DEVICE_ID = "DEV-INST";
-
-// ═══════════════════════════════════════════════
+const String DEVICE_ID = "DEV-DUAL";
+const int LOCKER_IDS[] = {1, 2}; // [1]=Commercial, [2]=Institution
+const int NUM_LOCKERS = 2;
 
 const char *WIFI_SSID = "test";
 const char *WIFI_PASSWORD = "12345678";
@@ -30,8 +22,6 @@ const char *WIFI_PASSWORD = "12345678";
 // ✅ FIXED: Point to root API to handle both Commercial and Institution
 const String SERVER_URL = "https://roccaheiwa.com";
 
-const String CHECK_STATUS_URL =
-    SERVER_URL + "/api/check_status.php?locker_id=" + String(LOCKER_ID);
 const String NFC_SUBMIT_URL = SERVER_URL + "/api/nfc_submit.php";
 const String NFC_CHECK_MODE_URL =
     SERVER_URL + "/api/nfc_check_mode.php?device_id=" + DEVICE_ID;
@@ -195,22 +185,28 @@ void sendNFCScan(String uid, String purpose) {
   http.end();
 }
 
-void checkServerStatus() {
+void checkServerStatus(int id) {
   if (WiFi.status() != WL_CONNECTED || registerMode)
     return;
+
+  String url = SERVER_URL + "/api/check_status.php?locker_id=" + String(id);
+
   HTTPClient http;
-  http.begin(CHECK_STATUS_URL);
+  http.begin(url);
   http.addHeader("ngrok-skip-browser-warning", "true");
   int code = http.GET();
   if (code == HTTP_CODE_OK) {
     String res = http.getString();
     res.trim();
-    if (res == "UNLOCK")
+    if (res == "UNLOCK") {
+      Serial.println("[STATUS] Locker " + String(id) + " -> UNLOCK");
       unlockSolenoid();
-    else if (res == "LOCK" && isUnlocked)
+    } else if (res == "LOCK" && isUnlocked) {
+      Serial.println("[STATUS] Locker " + String(id) + " -> LOCK");
       lockSolenoid();
+    }
   } else {
-    Serial.println("[STATUS] HTTP Error: " + String(code));
+    Serial.println("[STATUS] Locker " + String(id) + " HTTP Error: " + String(code));
   }
   http.end();
 }
@@ -304,10 +300,14 @@ void loop() {
     }
   }
 
-  // Server poll untuk locker status
+  // Server poll untuk locker status (Dual-Mode)
   if (!isUnlocked && millis() - lastPoll >= POLL_INTERVAL) {
     lastPoll = millis();
-    checkServerStatus();
+    for (int i = 0; i < NUM_LOCKERS; i++) {
+        checkServerStatus(LOCKER_IDS[i]);
+        delay(100); // Small gap between polls
+        if (isUnlocked) break; // Stop loop if unlocked by one of them
+    }
   }
 
   delay(10);
