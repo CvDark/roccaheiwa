@@ -56,7 +56,7 @@ try {
         WHERE esp32_device_id = ?
           AND purpose     = 'access'
           AND status      = 'pending'
-          AND created_at >= DATE_SUB(NOW(), INTERVAL 30 SECOND)
+          AND created_at >= DATE_SUB(NOW(), INTERVAL 2 MINUTE)
         ORDER BY created_at DESC
         LIMIT 1
     ");

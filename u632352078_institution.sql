@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 01, 2026 at 07:10 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: 127.0.0.1:3306
+-- Generation Time: Apr 09, 2026 at 02:39 AM
+-- Server version: 11.8.6-MariaDB-log
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `locker_institution`
+-- Database: `u632352078_institution`
 --
 
 -- --------------------------------------------------------
@@ -78,8 +78,7 @@ CREATE TABLE `activity_logs` (
 --
 
 INSERT INTO `activity_logs` (`id`, `user_id`, `locker_id`, `device_id`, `key_used`, `access_method`, `success`, `timestamp`) VALUES
-(1, 1, 2, NULL, 'LK-B2E411', 'web', 1, '2026-03-12 10:43:25'),
-(2, 2, 3, NULL, 'LK-B25A84', 'web', 1, '2026-03-12 10:49:44');
+(1, 1, 2, NULL, 'LK-B2E411', 'web', 1, '2026-03-12 10:43:25');
 
 -- --------------------------------------------------------
 
@@ -104,7 +103,8 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `name`, `username`, `password`, `role`, `institution`, `is_active`, `last_login`, `created_at`) VALUES
-(1, 'Nopal', 'admin', '$2y$10$mKv4pGyMJyTIBW4U.r7LD.0SsAdU3b1pP38MxV.77imNSEsQXyivW', 'superadmin', 'Smart Locker Institution', 1, '2026-03-25 22:55:19', '2026-03-10 20:01:00');
+(1, 'Nopal', 'admin', '$2y$10$mKv4pGyMJyTIBW4U.r7LD.0SsAdU3b1pP38MxV.77imNSEsQXyivW', 'superadmin', 'Smart Locker Institution', 1, '2026-04-07 01:07:43', '2026-03-10 20:01:00'),
+(2, 'Adam', 'DamZu', '$2y$10$Qli6xrLvBvC4rtaOD4Kgye6FZxtZoGZUPTRRE14VV.XoakvoOjSG6', 'superadmin', 'KMJ', 1, NULL, '2026-04-07 01:50:20');
 
 -- --------------------------------------------------------
 
@@ -159,11 +159,8 @@ CREATE TABLE `lockers` (
 --
 
 INSERT INTO `lockers` (`id`, `device_id`, `locker_key`, `unique_code`, `status`, `command_status`, `nfc_register_mode`, `created_at`) VALUES
-(1, 'DEV001', 'KEY123', 'INST001', 'available', 'IDLE', 0, '2026-03-10 12:01:00'),
-(2, 'DEV002', 'KEY456', 'INST002', 'occupied', 'IDLE', 0, '2026-03-10 12:01:00'),
-(3, 'DEV003', 'KEY789', 'INST003', 'occupied', 'IDLE', 0, '2026-03-10 12:01:00'),
-(4, 'DEV004', 'KEY465', 'INST004', 'available', 'IDLE', 0, '2026-03-10 12:01:00'),
-(5, 'DEV005', 'KEY889', 'INST005', 'available', 'IDLE', 0, '2026-03-10 12:01:00');
+(1, 'INST-BACKUP', 'KEY123', 'INST-BACKUP', 'available', 'IDLE', 0, '2026-03-10 12:01:00'),
+(2, 'DEV-DUAL', 'KEY456', 'INST-001', 'available', 'IDLE', 0, '2026-03-10 12:01:00');
 
 -- --------------------------------------------------------
 
@@ -198,6 +195,33 @@ CREATE TABLE `nfc_scan_queue` (
   `processed_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `nfc_scan_queue`
+--
+
+INSERT INTO `nfc_scan_queue` (`id`, `esp32_device_id`, `nfc_uid`, `purpose`, `status`, `created_at`, `processed_at`) VALUES
+(6, 'DEV001', '0433DBE43D0289', 'register', 'processed', '2026-04-06 01:55:41', '2026-04-06 01:55:43'),
+(7, 'DEV001', '0463C1EB3D0289', 'register', 'processed', '2026-04-06 01:56:06', '2026-04-06 01:56:06'),
+(9, 'DEV001', '04A335EE3D0289', 'register', 'processed', '2026-04-06 01:59:00', '2026-04-06 01:59:01'),
+(20, 'DEV001', '04A335EE3D0289', 'access', 'processed', '2026-04-06 02:29:45', '2026-04-06 02:29:45'),
+(21, 'DEV001', 'EB1FCB06', 'access', 'processed', '2026-04-06 02:29:53', '2026-04-06 02:29:53'),
+(22, 'DEV001', '0463C1EB3D0289', 'access', 'processed', '2026-04-06 02:30:00', '2026-04-06 02:30:00'),
+(23, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-06 02:30:10', '2026-04-06 02:30:11'),
+(24, 'DEV001', '04A335EE3D0289', 'access', 'processed', '2026-04-06 02:33:53', '2026-04-06 02:33:54'),
+(25, 'DEV001', '04A335EE3D0289', 'access', 'processed', '2026-04-06 02:35:29', '2026-04-06 02:35:30'),
+(26, 'DEV001', '04A335EE3D0289', 'access', 'processed', '2026-04-06 02:40:58', '2026-04-06 02:40:58'),
+(27, 'DEV001', '04A335EE3D0289', 'access', 'processed', '2026-04-06 02:41:57', '2026-04-06 02:41:58'),
+(35, 'DEV001', '0433DBE43D0289', 'register', 'processed', '2026-04-07 01:16:25', '2026-04-07 01:16:26'),
+(36, 'DEV001', '0463C1EB3D0289', 'register', 'processed', '2026-04-07 01:16:45', '2026-04-07 01:16:46'),
+(37, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-07 01:17:07', '2026-04-07 01:17:08'),
+(38, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-07 01:17:10', '2026-04-07 01:17:10'),
+(39, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-07 01:17:11', '2026-04-07 01:17:13'),
+(40, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-07 01:17:14', '2026-04-07 01:17:14'),
+(41, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-07 01:17:45', '2026-04-07 01:17:46'),
+(42, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-07 01:17:48', '2026-04-07 01:17:49'),
+(43, 'DEV001', '0433DBE43D0289', 'access', 'processed', '2026-04-07 01:18:19', '2026-04-07 01:18:21'),
+(84, 'DEV-DUAL', '0463C1EB3D0289', 'access', 'pending', '2026-04-08 14:56:45', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -221,7 +245,7 @@ CREATE TABLE `registered_matrics` (
 --
 
 INSERT INTO `registered_matrics` (`id`, `id_number`, `nfc_uid`, `full_name`, `user_type`, `institution`, `is_used`, `added_by`, `created_at`) VALUES
-(1, 'MC2516203256', NULL, 'MOHAMMAD ADAM ZUHAIR BIN MOHAMMAD YUSUF', 'student', 'KOLEJ MATRIKULASI JOHOR', 1, 1, '2026-03-12 22:08:39');
+(1, 'MC2516203256', '0463C1EB3D0289', 'MOHAMMAD ADAM ZUHAIR BIN MOHAMMAD YUSUF', 'student', 'KOLEJ MATRIKULASI JOHOR', 1, 1, '2026-03-12 22:08:39');
 
 -- --------------------------------------------------------
 
@@ -253,9 +277,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password_hash`, `full_name`, `phone`, `nfc_uid`, `nfc_registered_at`, `nfc_assigned_by`, `role`, `created_at`, `last_login`, `user_id_number`, `user_type`, `institution`, `is_active`, `paired_device_token`) VALUES
-(1, 'muhdnaufal123456789@gmail.com', '$2y$10$XX1FmuIKWtAFZQrVmiDwGeeaKCvJgs7KgFkp0WKG5koVPUXyBDMZe', 'Muhammad Naufal', '01158657710', NULL, NULL, NULL, 'user', '2026-03-10 12:31:20', '2026-03-25 14:54:47', 'MC2516203265', 'student', 'Johor Matriculation College', 1, NULL),
-(2, 'kisshorrengasamy@gmail.com', '$2y$10$nOgvuIhl9z5GGJaCXABFmeZSKcvlOQNuc9suKMeq8Jn6/N4OzU.f6', 'Iham', '0124105952', NULL, NULL, NULL, 'user', '2026-03-12 02:48:04', '2026-03-12 03:07:12', 'MC2516203260', 'staff', 'Johor Matriculation College', 1, NULL),
-(3, 'MohammadAdamZuhair@gmail.com', '$2y$10$aVuZXMo8xow6q.F69rqIX.k4kBtfs9yC6c7Bq2xHGqiGZVsbWfhky', 'MOHAMMAD ADAM ZUHAIR BIN MOHAMMAD YUSUF', '01111953345', NULL, NULL, NULL, 'user', '2026-03-12 14:23:22', '2026-03-12 14:23:35', 'MC2516203256', 'student', 'KOLEJ MATRIKULASI JOHOR', 1, NULL);
+(1, 'muhdnaufal123456789@gmail.com', '$2y$10$XX1FmuIKWtAFZQrVmiDwGeeaKCvJgs7KgFkp0WKG5koVPUXyBDMZe', 'Muhammad Naufal', '01158657710', '0433DBE43D0289', '2026-04-07 01:16:33', 1, 'user', '2026-03-10 12:31:20', '2026-04-08 13:47:23', 'MC2516203265', 'student', 'Johor Matriculation College', 1, NULL),
+(2, 'kisshorrengasamy@gmail.com', '$2y$10$nOgvuIhl9z5GGJaCXABFmeZSKcvlOQNuc9suKMeq8Jn6/N4OzU.f6', 'Iham', '0124105952', NULL, NULL, 1, 'user', '2026-03-12 02:48:04', '2026-03-12 03:07:12', 'MC2516203260', 'staff', 'Johor Matriculation College', 1, NULL),
+(3, 'MohammadAdamZuhair@gmail.com', '$2y$10$aVuZXMo8xow6q.F69rqIX.k4kBtfs9yC6c7Bq2xHGqiGZVsbWfhky', 'MOHAMMAD ADAM ZUHAIR BIN MOHAMMAD YUSUF', '01111953345', '0463C1EB3D0289', '2026-04-07 01:16:56', 1, 'user', '2026-03-12 14:23:22', '2026-03-12 14:23:35', 'MC2516203256', 'student', 'KOLEJ MATRIKULASI JOHOR', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -283,8 +307,7 @@ CREATE TABLE `user_locker_assignments` (
 
 INSERT INTO `user_locker_assignments` (`id`, `user_id`, `locker_id`, `key_value`, `assigned_at`, `is_active`, `custom_name`, `custom_location`, `id_number_used`, `access_expiry`, `updated_at`) VALUES
 (5, 1, 1, 'LK-A198', '2026-03-12 02:03:43', 0, 'Locker Naufal', 'Makmal Tutor', NULL, NULL, '2026-03-13 12:30:43'),
-(6, 1, 2, 'LK-B2E411', '2026-03-12 02:43:25', 1, 'Locker Naufal', 'Makmal Tutor', NULL, NULL, NULL),
-(7, 2, 3, 'LK-B25A84', '2026-03-12 02:49:44', 1, 'Locker Kisshor', 'Lab1', NULL, NULL, NULL);
+(6, 1, 2, 'LK-B2E411', '2026-03-12 02:43:25', 0, 'Locker Naufal', 'Makmal Tutor', NULL, NULL, '2026-04-06 02:27:43');
 
 --
 -- Indexes for dumped tables
@@ -420,7 +443,7 @@ ALTER TABLE `activity_logs`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `gm861_scan_queue`
@@ -450,7 +473,7 @@ ALTER TABLE `locker_requests`
 -- AUTO_INCREMENT for table `nfc_scan_queue`
 --
 ALTER TABLE `nfc_scan_queue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `registered_matrics`
