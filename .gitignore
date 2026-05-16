@@ -4,9 +4,29 @@
 # Jangan sekali-kali commit fail .env yang ada credentials!
 .env
 *.env
+
+# ==========================
+# Database / SQL
+# ==========================
+# Abaikan dump database untuk keselamatan data
 *.sql
 .sql
-.ino
+
+# ==========================
+# Arduino
+# ==========================
+# Abaikan hasil build dan file sementara Arduino
+build/
+bin/
+*.hex
+*.bin
+*.elf
+*.o
+*.a
+*.d
+*.sketch
+# Jika anda mahu simpan kod sumber (.ino) ke GitHub, buang baris di bawah:
+*.ino
 # ==========================
 # PHP / General
 # ==========================
