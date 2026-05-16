@@ -4,7 +4,9 @@
 # Jangan sekali-kali commit fail .env yang ada credentials!
 .env
 *.env
-
+*.sql
+.sql
+.ino
 # ==========================
 # PHP / General
 # ==========================

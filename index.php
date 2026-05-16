@@ -1,24 +1,41 @@
+<!-- 
+    PROJECT: Roccaheiwa Smart Locker System
+    DEVELOPER: Opall (https://opall.site)
+    COPYRIGHT: © 2026 Opall. All rights reserved.
+    Unauthorized duplication or redistribution of this code is prohibited.
+-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Locker System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --cream:   #f7f4ef;
-            --dark:    #1a1a18;
-            --mid:     #3d3d38;
-            --accent:  #2a6ef5;
-            --accent2: #0fce8f;
-            --border:  #e0dcd4;
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        html { scroll-behavior: smooth; }
+        :root {
+            --cream: #f7f4ef;
+            --dark: #1a1a18;
+            --mid: #3d3d38;
+            --accent: #2a6ef5;
+            --accent2: #0fce8f;
+            --border: #e0dcd4;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             font-family: 'DM Sans', sans-serif;
@@ -42,7 +59,9 @@
         /* ── NAV ── */
         nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
             padding: 20px 48px;
             display: flex;
@@ -65,7 +84,8 @@
         }
 
         .logo-icon {
-            width: 36px; height: 36px;
+            width: 36px;
+            height: 36px;
             background: var(--dark);
             border-radius: 8px;
             display: grid;
@@ -103,15 +123,21 @@
             filter: blur(80px);
             pointer-events: none;
         }
+
         .blob-1 {
-            width: 500px; height: 500px;
+            width: 500px;
+            height: 500px;
             background: rgba(42, 110, 245, 0.08);
-            top: -100px; right: -100px;
+            top: -100px;
+            right: -100px;
         }
+
         .blob-2 {
-            width: 400px; height: 400px;
+            width: 400px;
+            height: 400px;
             background: rgba(15, 206, 143, 0.07);
-            bottom: 0; left: -80px;
+            bottom: 0;
+            left: -80px;
         }
 
         .hero-eyebrow {
@@ -132,15 +158,23 @@
         }
 
         .hero-eyebrow span {
-            width: 6px; height: 6px;
+            width: 6px;
+            height: 6px;
             background: var(--accent);
             border-radius: 50%;
             animation: blink 1.5s infinite;
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.2;
+            }
         }
 
         .hero-title {
@@ -163,7 +197,9 @@
         .hero-title em::after {
             content: '';
             position: absolute;
-            bottom: 4px; left: 0; right: 0;
+            bottom: 4px;
+            left: 0;
+            right: 0;
             height: 3px;
             background: var(--accent2);
             border-radius: 2px;
@@ -173,7 +209,9 @@
         }
 
         @keyframes lineIn {
-            to { transform: scaleX(1); }
+            to {
+                transform: scaleX(1);
+            }
         }
 
         .hero-sub {
@@ -194,13 +232,27 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(8px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(8px);
+            }
         }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ── CHOOSE SECTION ── */
@@ -263,25 +315,33 @@
         }
 
         .card.commercial::before {
-            background: linear-gradient(135deg, rgba(42,110,245,0.04), rgba(42,110,245,0.01));
+            background: linear-gradient(135deg, rgba(42, 110, 245, 0.04), rgba(42, 110, 245, 0.01));
         }
 
         .card.institution::before {
-            background: linear-gradient(135deg, rgba(15,206,143,0.06), rgba(15,206,143,0.01));
+            background: linear-gradient(135deg, rgba(15, 206, 143, 0.06), rgba(15, 206, 143, 0.01));
         }
 
         .card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.10);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.10);
         }
 
-        .card:hover::before { opacity: 1; }
+        .card:hover::before {
+            opacity: 1;
+        }
 
-        .card.commercial:hover { border-color: rgba(42,110,245,0.35); }
-        .card.institution:hover { border-color: rgba(15,206,143,0.45); }
+        .card.commercial:hover {
+            border-color: rgba(42, 110, 245, 0.35);
+        }
+
+        .card.institution:hover {
+            border-color: rgba(15, 206, 143, 0.45);
+        }
 
         .card-icon {
-            width: 56px; height: 56px;
+            width: 56px;
+            height: 56px;
             border-radius: 14px;
             display: grid;
             place-items: center;
@@ -290,11 +350,11 @@
         }
 
         .card.commercial .card-icon {
-            background: rgba(42,110,245,0.10);
+            background: rgba(42, 110, 245, 0.10);
         }
 
         .card.institution .card-icon {
-            background: rgba(15,206,143,0.12);
+            background: rgba(15, 206, 143, 0.12);
         }
 
         .card-tag {
@@ -309,12 +369,12 @@
         }
 
         .card.commercial .card-tag {
-            background: rgba(42,110,245,0.10);
+            background: rgba(42, 110, 245, 0.10);
             color: var(--accent);
         }
 
         .card.institution .card-tag {
-            background: rgba(15,206,143,0.12);
+            background: rgba(15, 206, 143, 0.12);
             color: #0a9e6e;
         }
 
@@ -350,13 +410,19 @@
         }
 
         .feat-dot {
-            width: 7px; height: 7px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             flex-shrink: 0;
         }
 
-        .card.commercial .feat-dot { background: var(--accent); }
-        .card.institution .feat-dot { background: var(--accent2); }
+        .card.commercial .feat-dot {
+            background: var(--accent);
+        }
+
+        .card.institution .feat-dot {
+            background: var(--accent2);
+        }
 
         .card-cta {
             margin-top: auto;
@@ -372,11 +438,17 @@
             font-weight: 600;
         }
 
-        .card.commercial .cta-text { color: var(--accent); }
-        .card.institution .cta-text { color: #0a9e6e; }
+        .card.commercial .cta-text {
+            color: var(--accent);
+        }
+
+        .card.institution .cta-text {
+            color: #0a9e6e;
+        }
 
         .cta-arrow {
-            width: 36px; height: 36px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: grid;
             place-items: center;
@@ -385,12 +457,12 @@
         }
 
         .card.commercial .cta-arrow {
-            background: rgba(42,110,245,0.10);
+            background: rgba(42, 110, 245, 0.10);
             color: var(--accent);
         }
 
         .card.institution .cta-arrow {
-            background: rgba(15,206,143,0.12);
+            background: rgba(15, 206, 143, 0.12);
             color: #0a9e6e;
         }
 
@@ -458,17 +530,34 @@
             transform: translateY(0);
         }
 
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
 
         @media (max-width: 600px) {
-            nav { padding: 16px 20px; }
-            .hero { padding: 100px 20px 60px; }
-            .choose { padding: 60px 20px 80px; }
-            footer { padding: 24px 20px; }
+            nav {
+                padding: 16px 20px;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .choose {
+                padding: 60px 20px 80px;
+            }
+
+            footer {
+                padding: 24px 20px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- NAV -->
@@ -516,7 +605,8 @@
                 <div>
                     <h3 class="card-title">For Businesses &amp; Offices</h3>
                     <p class="card-desc">
-                        Perfect for offices, gyms, hotels, and any organisation that needs a flexible, modern locker solution.
+                        Perfect for offices, gyms, hotels, and any organisation that needs a flexible, modern locker
+                        solution.
                     </p>
                 </div>
                 <ul class="card-features">
@@ -540,7 +630,8 @@
                 <div>
                     <h3 class="card-title">For Schools &amp; Colleges</h3>
                     <p class="card-desc">
-                        Designed for universities, matriculation colleges, and schools — integrates with your student card system.
+                        Designed for universities, matriculation colleges, and schools — integrates with your student
+                        card system.
                     </p>
                 </div>
                 <ul class="card-features">
@@ -565,7 +656,7 @@
     <!-- FOOTER -->
     <footer>
         <h1 class="footer-logo">🔒 Smart Locker System</h1>
-        <span class="footer-copy">© 2026 Smart Locker System · Institutional Version v2.0</span>
+        <span class="footer-copy">© 2026 Smart Locker System · Institutional Version v2.0 · Developer: Opall</span>
     </footer>
 
     <script>
@@ -583,4 +674,5 @@
         reveals.forEach(el => observer.observe(el));
     </script>
 </body>
+
 </html>
